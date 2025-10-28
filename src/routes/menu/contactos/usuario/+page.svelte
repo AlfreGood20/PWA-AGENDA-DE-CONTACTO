@@ -73,7 +73,7 @@
                 <i class="bi bi-backspace" aria-hidden="true"></i>
             </button>
            
-            <button class="btn btn-link " id="liveAlertBtn" style="font-size: 2rem;" aria-label="Agregar a favoritos"
+            <button class="btn btn-link " style="font-size: 2rem;" aria-label="Agregar a favoritos"
             on:click={()=> mostrarMensajeFavorito()}>
                 <i class="bi bi-bookmark-star-fill" aria-hidden="true"></i>
             </button>
@@ -83,7 +83,7 @@
                 <i class="bi bi-bookmark-x-fill" aria-hidden="true"></i>
             </button>
           
-            <button class="btn btn-link" style="font-size: 2rem;" aria-label="Editar contacto">
+            <button class="btn btn-link" style="font-size: 2rem;" aria-label="Editar contacto" data-bs-toggle="modal" data-bs-target="#Editar">
                 <i class="bi bi-brush-fill" aria-hidden="true"></i>
             </button>
         </div>
@@ -139,6 +139,85 @@
             <h1>{contacto.categoria}</h1>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="Editar" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Contacto</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+            
+            <div class="row">
+
+                <div class="col-12">
+                    <p class="text-center">Nombre:</p>
+                </div>
+
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <input bind:value={contacto.nombre}>
+                </div>
+
+                <div class="col-12 mt-3">
+                <p class="text-center">Apellidos:</p>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={contacto.apellidos} class="form-control" placeholder="Apellidos" style="width: 70%;" />
+                </div>
+
+                <!-- Teléfono -->
+                <div class="col-12 mt-3">
+                <p class="text-center">Teléfono:</p>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={contacto.Telefono} class="form-control" placeholder="Teléfono" style="width: 70%;" />
+                </div>
+
+                <!-- Correo -->
+                <div class="col-12 mt-3">
+                <p class="text-center">Correo:</p>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={contacto.correo} class="form-control" placeholder="Correo" style="width: 70%;" />
+                </div>
+
+                <!-- Dirección -->
+                <div class="col-12 mt-3">
+                <p class="text-center">Dirección:</p>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={contacto.direccion} class="form-control" placeholder="Dirección" style="width: 70%;" />
+                </div>
+
+                <!-- Categoría -->
+                <div class="col-12 mt-3">
+                <p class="text-center">Categoría:</p>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                <i class="bi bi-grid" style="font-size: 2rem; margin-right: 10px;"></i>
+                <select bind:value={contacto.categoria} class="form-select" style="width: 70%; height: 60px;">
+                    <option value="Familiar">Familiar</option>
+                    <option value="Amigo">Amigo</option>
+                    <option value="Negocio">Negocio</option>
+                    <option value="Novi@">Novi@</option>
+                    <option value="Amante">Amante</option>
+                    <option value="Ex">Ex novi@</option>
+                </select>
+                </div>
+            </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success">Actualizar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <Modal

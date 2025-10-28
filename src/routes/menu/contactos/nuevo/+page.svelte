@@ -11,7 +11,6 @@
      * @returns {string}
      */
 
-
     function generarAvatar(nombre, size = 150, background = "99A6F7", color = "0D0D0D") {
         const url = "https://ui-avatars.com/api/";
         const parametros = new URLSearchParams({
@@ -102,7 +101,6 @@
                 <option value="Ex">Ex novi@</option>
             </select>
         </div>
-
 
     </div>
 
