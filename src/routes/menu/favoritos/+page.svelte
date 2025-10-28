@@ -6,7 +6,7 @@
 <Barra />
 
 <div class="container" style="margin-top: 90px; margin-bottom: 60px;">
-    <h1>Favoritos</h1>
+    <h1 class="display-5 text-center mb-3">Favoritos</h1>
 </div>
 
 <Nav />

@@ -52,12 +52,12 @@
     {/each}
 </div>
 
-<button 
-    class="btn btn-primary justify-content-center align-items-center rounded-5" 
-    style="bottom: 110px;  position: fixed; width: 70px; height: 70px; right: 20px;"
-    aria-label="Agregar contacto" title="Agregar contacto" type="button">
+<a 
+    class="btn btn-primary d-flex justify-content-center align-items-center rounded-5" 
+    style="bottom: 110px; position: fixed; width: 70px; height: 70px; right: 20px;"
+    aria-label="Agregar contacto" title="Agregar contacto" href="/menu/contactos/nuevo">
 
     <i class="bi bi-person-plus-fill" style="font-size: 1.9rem;" aria-hidden="true"></i>
-</button>
+</a>
 
 <Nav />
