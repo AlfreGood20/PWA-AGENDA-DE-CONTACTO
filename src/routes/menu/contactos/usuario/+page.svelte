@@ -2,26 +2,39 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import Navbar from '$lib/components/navbar.svelte';
-    import Modal from '$lib/components/modal.svelte'
-    import Alert from '$lib/components/alerta.svelte'
+    import Modal from '$lib/components/modal.svelte';
+    import Alert from '$lib/components/alerta.svelte';
+    import { getContactoId } from '$lib/api';
+    import { generarAvatar } from '$lib/js/funciones';
     
-    /*let id=null;
+    /**
+     * @type {any | null}
+     */
+    let id=null;
 
     onMount(() => {
         const parametro = new URLSearchParams(window.location.search);
         id = parametro.get('id'); 
-    });*/
+    });
 
-    let contacto = 
-        {id: 1, 
-        nombre: "José Alfredo", 
-        apellidos: "López De La Cruz", 
-        direccion: "Espejo 2 Telpalcatepec 111", 
-        Telefono:"9932460918", 
-        correo:"jose@123",
-        avatar:"https://ui-avatars.com/api/?name=Jose+Alfredo", 
-        categoria:"Familiar"
-    };
+    /**
+     * @type {{ nombre: String; apellidos: String; Telefono: String; correo: String; direccion: String; categoria: String; color_avatar: String}}
+     */
+    let contacto;
+    let cargando=true;
+    async function obtenerContacto() {
+        try{
+            const response = await getContactoId(id);
+            contacto=response;
+        }catch(e){
+            // @ts-ignore
+            if(e.response.status == 401) goto('/login');
+        }finally{
+            cargando=false;
+        }
+    }
+
+    onMount(obtenerContacto);
 
     let visibleModalEliminar= false;
 
@@ -100,44 +113,51 @@
             visible= {mostrarAlertaQuitarFavorito}
         />
 
-        <div class="col-12 col-md-12 d-flex justify-content-center">
-            <img src="https://ui-avatars.com/api/?name=Jose+Alfredo&size=256" alt="Avatar" style="width: 200px; height: 200px; border-radius: 50%;">
-        </div>
-     
-        <div class="col-md-6 col-12 mt-5">
-            <p style="font-size: 23px;">Nombre: 
-               <span>{contacto.nombre}</span> 
-            </p>
-        </div>
-
+        {#if cargando}
+            <div class="text-center" style="margin-top: 100px;">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+        {:else}
+            <div class="col-12 col-md-12 d-flex justify-content-center">
+                <img src={`${generarAvatar(contacto.nombre,256,contacto.color_avatar.replace('#',''))}`} alt="Avatar" style="width: 200px; height: 200px; border-radius: 50%;">
+            </div>
         
-        <div class="col-md-6 col-12 mt-3">
-            <p style="font-size: 23px;">Apellidos: 
-                <span>{contacto.apellidos}</span>
-            </p>
-        </div>
+            <div class="col-md-6 col-12 mt-5">
+                <p style="font-size: 23px;">Nombre: 
+                <span>{contacto.nombre}</span> 
+                </p>
+            </div>
+            
+            <div class="col-md-6 col-12 mt-5">
+                <p style="font-size: 23px;">Apellidos: 
+                    <span>{contacto.apellidos}</span>
+                </p>
+            </div>
 
-        <div class="col-md-6 col-12 mt-3">
-            <p style="font-size: 23px;">Telefono: 
-                <span>{contacto.Telefono}</span>
-            </p>
-        </div>
+            <div class="col-md-6 col-12 mt-3">
+                <p style="font-size: 23px;">Telefono: 
+                    <span>{contacto.Telefono}</span>
+                </p>
+            </div>
 
-        <div class="col-md-6 col-12 mt-3">
-            <p style="font-size: 23px;">Correo: 
-                <span>{contacto.correo}</span>
-            </p>
-        </div>
+            <div class="col-md-6 col-12 mt-3">
+                <p style="font-size: 23px;">Correo: 
+                    <span>{contacto.correo}</span>
+                </p>
+            </div>
 
-        <div class="col-md-6 col-12 mt-3">
-            <p style="font-size: 23px;">Dirección: 
-                <span>{contacto.direccion}</span>
-            </p>
-        </div>
+            <div class="col-md-6 col-12 mt-3">
+                <p style="font-size: 23px;">Dirección: 
+                    <span>{contacto.direccion}</span>
+                </p>
+            </div>
 
-        <div class="col-md-12 col-12 mt-3 d-flex justify-content-center">
-            <h1>{contacto.categoria}</h1>
-        </div>
+            <div class="col-md-12 col-12 mt-3 d-flex justify-content-center">
+                <h1>{contacto.categoria}</h1>
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -151,7 +171,6 @@
 
       <div class="modal-body">
         <form>
-            
             <div class="row">
 
                 <div class="col-12">
@@ -200,12 +219,14 @@
                 <div class="col-12 d-flex justify-content-center align-items-center">
                 <i class="bi bi-grid" style="font-size: 2rem; margin-right: 10px;"></i>
                 <select bind:value={contacto.categoria} class="form-select" style="width: 70%; height: 60px;">
-                    <option value="Familiar">Familiar</option>
+                     <option value="Familiar">Familia</option>
+                    <option value="Ecuela">Escuela</option>
                     <option value="Amigo">Amigo</option>
                     <option value="Negocio">Negocio</option>
-                    <option value="Novi@">Novi@</option>
+                    <option value="Novia">Novia</option>
+                    <option value="Novio">Novio</option>
+                    <option value="Ex">Ex</option>
                     <option value="Amante">Amante</option>
-                    <option value="Ex">Ex novi@</option>
                 </select>
                 </div>
             </div>

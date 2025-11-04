@@ -1,32 +1,16 @@
 <script>
     import Nav from '$lib/components/navbar.svelte';
     import Alert from '$lib/components/alerta.svelte';
-
-    /**
-     * Generate an avatar URL.
-     * @param {string} nombre
-     * @param {number} [size]
-     * @param {string} [background]
-     * @param {string} [color]
-     * @returns {string}
-     */
-
-    function generarAvatar(nombre, size = 150, background = "99A6F7", color = "0D0D0D") {
-        const url = "https://ui-avatars.com/api/";
-        const parametros = new URLSearchParams({
-            name: nombre,
-            size: size.toString(),
-            background,
-            color
-        });
-
-        return `${url}?${parametros.toString()}`;
-    }
+    import { generarAvatar } from '$lib/js/funciones';
 
 
     let alertaGuardar=false;
     let nombre="";
     let colorSeleccionado="#99A6F7";
+    
+    /**
+     * @type {HTMLInputElement}
+     */
     let colorInput;
 
 
@@ -93,12 +77,14 @@
         <div class="col-12">
             <i class="bi bi-grid" style="font-size: 2rem; margin-left: 30px; mar"></i>
             <select name="opciones" style="margin-left: 20px; height: 60px; width: 70%;">
-                <option value="Familiar">Familiar</option>
+                <option value="Familiar">Familia</option>
+                <option value="Ecuela">Escuela</option>
                 <option value="Amigo">Amigo</option>
                 <option value="Negocio">Negocio</option>
-                <option value="Novi@">Novia@</option>
+                <option value="Novia">Novia</option>
+                <option value="Novio">Novio</option>
+                <option value="Ex">Ex</option>
                 <option value="Amante">Amante</option>
-                <option value="Ex">Ex novi@</option>
             </select>
         </div>
 
