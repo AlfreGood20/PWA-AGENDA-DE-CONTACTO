@@ -24,7 +24,7 @@
     <!-- Card para el login -->
     <div class="row d-flex justify-content-center align-items-center" style="height: 100vh;">
 
-        <div class="card col-12 col-md-6 col-lg-4 shadow-lg">
+        <div class="card col-12 col-md-6 col-lg-4 shadow-lgs">
 
             <div class="card-body">
 
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center ">
-                    <a href="#">Crear Cuenta</a>
+                    <a href="/registro">Crear Cuenta</a>
                 </div>
 
             </div>
