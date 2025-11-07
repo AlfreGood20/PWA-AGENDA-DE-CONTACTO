@@ -16,11 +16,12 @@
      * @returns {string}
      */
     
+    
+    let cargado = false;
     /**
      * @type {any[] | null | undefined}
      */
-    let contactos = [];
-    let cargando = false;
+    let contactos;
     async function obtenerContactos() {
         try{
             const response = await getContactos();
@@ -28,8 +29,9 @@
         }catch(e){
             // @ts-ignore
             if(e.response.status == 401) goto('/login');
+            else goto('/login');
         } finally{
-            cargando = false;
+            cargado = true;
         }
     }
 
@@ -42,14 +44,14 @@
 <div class="container" style="margin-top: 75px; margin-bottom: 100px;">
     <h1 class="display-5 text-center mb-3">Contactos</h1>
 
-    {#if cargando}
-        <div class="text-center" style="margin-top: 100px;">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+    {#if !cargado}
+        <div class="text-center" style="margin-top: 130px;">
+            <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
                 <span class="sr-only"></span>
             </div>
         </div>
     {:else if contactos == null || contactos.length == 0}
-        <div class="text-center" style="margin-top: 130px;">
+        <div class="text-center" style="margin-top: 150px;">
             <h1 class="display-5">No hay contactos</h1>
         </div>
     {:else if contactos.length > 0}
