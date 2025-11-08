@@ -5,6 +5,8 @@ import { contacto } from './js/clases';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+
+// LOGIN LLAMADA
 /**
  * @param {Login} request
  */
@@ -21,7 +23,16 @@ export async function postLogin(request) {
     }
 }
 
+export async function getCerrarSession() {
+    try{
+        const reponse = await axios.get(`${API_URL}/api/deauthenticate`);
+        return reponse;
+    }catch(error){
+        throw error;
+    }
+}
 
+// CONTACTOS
 export async function getContactos() {
     try{
         const reponse = await axios.get(`${API_URL}/contactos`,{
@@ -46,7 +57,7 @@ export async function getContactoId(id) {
     }
 }
 
-export async function getContactoFavoritos() {
+export async function getContactosFavoritos() {
     try{
         const response= await axios.get(`${API_URL}/contactos/favoritos`,{
             withCredentials: true
@@ -67,7 +78,7 @@ export async function postContacto(request) {
             withCredentials: true
         });
 
-        return response;
+        return response.data;
     }catch(e){
         throw e;
     }
@@ -82,8 +93,25 @@ export async function deleteContactoId(id) {
             withCredentials: true
         });
 
-        return response;
+        return response.status;
     }catch(e){
         throw e;
+    }
+}
+
+/**
+ * @param {Number} id
+ * @param {Boolean} estado
+ */
+
+export async function patchContactoIsFavorito(id, estado) {
+    try{
+        const response = await axios.patch(`${API_URL}/contacto/${id}?estado=${estado}`, null, {
+            withCredentials: true
+        });
+
+        return response.data;
+    }catch(error){
+        throw error;
     }
 }
