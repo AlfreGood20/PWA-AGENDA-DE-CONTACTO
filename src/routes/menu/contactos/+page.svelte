@@ -41,7 +41,7 @@
 
 <Barra />
 
-<div class="container" style="margin-top: 75px; margin-bottom: 100px;">
+<div class="container" style="margin-top: 75px; margin-bottom: 110px;">
     <h1 class="display-5 text-center mb-3">Contactos</h1>
 
     {#if !cargado}

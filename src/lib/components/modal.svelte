@@ -4,7 +4,6 @@
     export let visible=false;
     export let nombreBotonAccion;
     export let color;
-
     export let accion;
     export let cerrar;
 </script>
@@ -21,7 +20,7 @@
         <p>{mensaje}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" on:click={() => cerrar()}>Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" on:click={() => cerrar()}>Cerrar</button>
         <button type="button" class={`btn btn-${color}`} on:click={()=>accion()}>{nombreBotonAccion}</button>
       </div>
     </div>

@@ -6,73 +6,89 @@
     import Alert from '$lib/components/alerta.svelte';
     import { getContactoId } from '$lib/api';
     import { generarAvatar } from '$lib/js/funciones';
+    import { deleteContactoId } from '$lib/api';
+    import { patchContactoIsFavorito } from '$lib/api';
     
-    /**
-     * @type {any | null}
-     */
-    let id=null;
+     let cargando=true;
 
-    onMount(() => {
-        const parametro = new URLSearchParams(window.location.search);
-        id = parametro.get('id'); 
-    });
-
-    /**
-     * @type {{ nombre: String; apellidos: String; Telefono: String; correo: String; direccion: String; categoria: String; color_avatar: String}}
-     */
-    let contacto;
-    let cargando=true;
-    async function obtenerContacto() {
-        try{
-            const response = await getContactoId(id);
-            contacto=response;
-        }catch(e){
-            // @ts-ignore
-            if(e.response.status == 401) goto('/login');
-        }finally{
-            cargando=false;
+     let visibleModalEliminar=false;
+     function abrirModalEliminar(){
+        if(visibleModalEliminar){
+            visibleModalEliminar=false;
+            return;
         }
-    }
-
-    onMount(obtenerContacto);
-
-    let visibleModalEliminar= false;
-
-    function abrirModalEliminar(){
         visibleModalEliminar=true;
-    }
-
-    function cerrarModalEliminar() {
-        visibleModalEliminar = false;
-    }
-
-    function eliminarContacto() {
-        alert('Simulacion de eliminacion')
-        cerrarModalEliminar();
-
-        goto('/menu/contactos');
-    }
-
+     }
 
     let mostrarAlertaFavorito = false;
-
     function mostrarMensajeFavorito() {
+        cambiarEstadoContacto(true);
         mostrarAlertaFavorito = true;
-
         setTimeout(()=> {
             mostrarAlertaFavorito=false;
         }, 4000);
     }
 
     let mostrarAlertaQuitarFavorito=false;
-
     function mostrarMensajeQuitarFavorito() {
+        cambiarEstadoContacto(false);
         mostrarAlertaQuitarFavorito = true;
-
         setTimeout(()=> {
             mostrarAlertaQuitarFavorito=false;
         }, 4000);
     }
+
+
+     /**
+     * @type {any | null}
+     */
+    let id;
+    onMount(async () => {
+        const parametro = new URLSearchParams(window.location.search);
+        id = parametro.get('id');
+        await obtenerContacto();
+    });
+ 
+    /**
+     * @type {any | null}
+     */
+    let contacto = {nombre: '', apellidos: '', telefono: '', correo: '', direccion: '', categoria: '', color_avatar: '#000000'};
+
+
+     async function obtenerContacto() {
+         try{
+             const response = await getContactoId(id);
+             contacto=response;
+         }catch(e){
+             // @ts-ignore
+             if(e.response.status == 401) goto('/login');
+         }finally{
+             cargando=false;
+         }
+     }
+
+     async function eliminarContacto() {
+        try {
+            const response = await deleteContactoId(id);
+            
+            if(response == 204) goto('/menu/contactos');
+        } catch (error) {
+            console.log(error);
+        }
+     }
+
+     /**
+      * 
+      * @param {boolean} estado
+      */
+     async function cambiarEstadoContacto(estado) {
+        try {
+            const response = await patchContactoIsFavorito(id,estado);
+        } catch (error) {
+            console.log(error);
+        }
+     }
+
 </script>
 
 <div class="container" style="margin-bottom: 100px;">
@@ -101,17 +117,6 @@
             </button>
         </div>
 
-        <Alert 
-            color="success"
-            mensaje= {`Has agregado a ${contacto.nombre} ${contacto.apellidos} a favoritos`}
-            visible= {mostrarAlertaFavorito}
-        />
-
-        <Alert 
-            color="dark"
-            mensaje= {`Has quitado a ${contacto.nombre} ${contacto.apellidos} de favoritos`}
-            visible= {mostrarAlertaQuitarFavorito}
-        />
 
         {#if cargando}
             <div class="text-center" style="margin-top: 100px;">
@@ -120,6 +125,19 @@
                 </div>
             </div>
         {:else}
+
+            <Alert 
+            color="success"
+            mensaje= {`Has agregado a ${contacto.nombre} ${contacto.apellidos} a favoritos`}
+            visible= {mostrarAlertaFavorito}
+            />
+
+            <Alert 
+                color="dark"
+                mensaje= {`Has quitado a ${contacto.nombre} ${contacto.apellidos} de favoritos`}
+                visible= {mostrarAlertaQuitarFavorito}
+            />
+
             <div class="col-12 col-md-12 d-flex justify-content-center">
                 <img src={`${generarAvatar(contacto.nombre,256,contacto.color_avatar.replace('#',''))}`} alt="Avatar" style="width: 200px; height: 200px; border-radius: 50%;">
             </div>
@@ -130,7 +148,7 @@
                 </p>
             </div>
             
-            <div class="col-md-6 col-12 mt-5">
+            <div class="col-md-6 col-12 mt-3">
                 <p style="font-size: 23px;">Apellidos: 
                     <span>{contacto.apellidos}</span>
                 </p>
@@ -138,7 +156,7 @@
 
             <div class="col-md-6 col-12 mt-3">
                 <p style="font-size: 23px;">Telefono: 
-                    <span>{contacto.Telefono}</span>
+                    <span>{contacto.telefono}</span>
                 </p>
             </div>
 
@@ -154,12 +172,13 @@
                 </p>
             </div>
 
-            <div class="col-md-12 col-12 mt-3 d-flex justify-content-center">
+            <div class="col-md-12 col-12  d-flex justify-content-center">
                 <h1>{contacto.categoria}</h1>
             </div>
         {/if}
     </div>
 </div>
+
 
 <div class="modal fade" id="Editar" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -178,7 +197,7 @@
                 </div>
 
                 <div class="col-12 d-flex justify-content-center align-items-center">
-                    <input bind:value={contacto.nombre}>
+                    <input bind:value={contacto.nombre} class="form-control" placeholder="Nombre" style="width: 70%;">
                 </div>
 
                 <div class="col-12 mt-3">
@@ -244,11 +263,11 @@
 <Modal
     titulo="Eliminar"
     mensaje="¿Seguro que quieres eliminar este contacto?"
-    cerrar={()=> cerrarModalEliminar()}
+    cerrar={()=> abrirModalEliminar()}
     visible={visibleModalEliminar}
     color="danger"
     nombreBotonAccion="Eliminar"
-    accion={() => eliminarContacto()}
+    accion={eliminarContacto}
 />
 
 <Navbar/>
