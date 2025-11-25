@@ -1,5 +1,8 @@
 <script>
     import Validacion from "$lib/components/validacion.svelte";
+    import { Usuario } from "$lib/js/clases";
+    import { postUsuario } from "$lib/api";
+    import { goto } from "$app/navigation";
 
 
     let nombre = '';
@@ -7,7 +10,17 @@
     let telefono = '';
     let correo = '';
     let password = '';
+
     let mostrarPassword=false;
+
+    async function registrarse() {
+        try {
+            const response = await postUsuario(new Usuario(nombre, apellidos, telefono, correo, password));
+            goto('/login');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     /** 
      * @param {string} correo
@@ -34,7 +47,7 @@
 
     <div class="row">
         
-        <form novalidate>
+        <form novalidate on:submit|preventDefault={registrarse}>
             <div class="col-12">
                 <label for="nombre" class="form-label">Nombre: </label>
                 <input bind:value={nombre} class="form-control {nombre ? 'is-valid':'is-invalid'}"  placeholder="Juan Perez"  required>
