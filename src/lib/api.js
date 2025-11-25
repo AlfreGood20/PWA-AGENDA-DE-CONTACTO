@@ -1,32 +1,57 @@
 import axios from 'axios';
 import { Login } from './js/clases';
 import { contacto } from './js/clases';
+import { Usuario } from './js/clases';
 
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-
-// LOGIN LLAMADA
 /**
  * @param {Login} request
  */
 export async function postLogin(request) {
 
     try{
-        const reponse = await axios.post(`${API_URL}/auth`,request, {
+        const response = await axios.post(`${API_URL}/auth`, request, {
             withCredentials: true
         });
 
-        return reponse.data;
+        return response.data;
     }catch(error){
         throw error;
     }
 }
 
+
 export async function getCerrarSession() {
     try{
-        const reponse = await axios.get(`${API_URL}/api/deauthenticate`);
+        const reponse = await axios.get(`${API_URL}/deauthenticate`);
         return reponse;
+    }catch(error){
+        throw error;
+    }
+}
+
+
+/**
+ * @param {Usuario} request 
+ */
+export async function postUsuario(request) {
+    try {
+        const reponse = await axios.post(`${API_URL}/usuario`,request)
+        return reponse;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getPefil() {
+    try{
+        const response = await axios.get(`${API_URL}/perfil`,{
+            withCredentials: true
+        })
+
+        return response.data;
     }catch(error){
         throw error;
     }
@@ -50,7 +75,9 @@ export async function getContactos() {
  */
 export async function getContactoId(id) {
     try{
-        const response = await axios.get(`${API_URL}/contacto/${id}`);
+        const response = await axios.get(`${API_URL}/contacto/${id}`,{
+            withCredentials: true
+        });
         return response.data;
     }catch(e){
         throw e;
@@ -112,6 +139,21 @@ export async function patchContactoIsFavorito(id, estado) {
 
         return response.data;
     }catch(error){
+        throw error;
+    }
+}
+/**
+ * @param {Number} id 
+ * @param {contacto} request 
+ */
+export async function putContacto(id, request) {
+    try {
+        const response = await axios.put(`${API_URL}/contacto/${id}`, request, {
+            withCredentials: true
+        });
+
+        return response.data;
+    } catch (error) {
         throw error;
     }
 }

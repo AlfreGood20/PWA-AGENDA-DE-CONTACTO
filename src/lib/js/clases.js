@@ -44,3 +44,27 @@ export class contacto{
         this.color_avatar=color_avatar;
     }
 }
+
+export class Usuario{
+    nombre;
+    apellidos;
+    telefono;
+    correo;
+    contrasena;
+
+    /**
+     * @param {string} nombre 
+     * @param {string} apellidos 
+     * @param {string} telefono 
+     * @param {string} correo 
+     * @param {string} contrasena 
+     */
+
+    constructor(nombre, apellidos, telefono, correo, contrasena){
+        this.nombre=nombre;
+        this.apellidos=apellidos;
+        this.telefono=telefono;
+        this.correo=correo;
+        this.contrasena=contrasena;
+    }
+}
