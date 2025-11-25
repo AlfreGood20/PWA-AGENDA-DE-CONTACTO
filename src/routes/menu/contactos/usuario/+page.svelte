@@ -8,6 +8,7 @@
     import { generarAvatar } from '$lib/js/funciones';
     import { deleteContactoId } from '$lib/api';
     import { patchContactoIsFavorito } from '$lib/api';
+    import { putContacto } from '$lib/api';
     
      let cargando=true;
 
@@ -36,6 +37,22 @@
         setTimeout(()=> {
             mostrarAlertaQuitarFavorito=false;
         }, 4000);
+    }
+
+    let visibleModalEditar=false;
+    /**
+     * @type any
+     */
+    let editableContacto = null;
+    function mostrarModalActualizar() {
+        if (visibleModalEditar) {
+            visibleModalEditar = false;
+            editableContacto = null;
+            return;
+        }
+
+        editableContacto = { ...contacto };
+        visibleModalEditar = true;
     }
 
 
@@ -89,6 +106,19 @@
         }
      }
 
+     async function actualizarContacto() {
+        try {
+            const response = await putContacto(id, editableContacto);
+
+            contacto = response ?? { ...editableContacto };
+           
+            visibleModalEditar = false;
+            editableContacto = null;
+        } catch (error) {
+            console.log(error);
+        }
+     }
+
 </script>
 
 <div class="container" style="margin-bottom: 100px;">
@@ -112,15 +142,15 @@
                 <i class="bi bi-bookmark-x-fill" aria-hidden="true"></i>
             </button>
           
-            <button class="btn btn-link" style="font-size: 2rem;" aria-label="Editar contacto" data-bs-toggle="modal" data-bs-target="#Editar">
+            <button class="btn btn-link" style="font-size: 2rem;" aria-label="Editar contacto" on:click={mostrarModalActualizar}>
                 <i class="bi bi-brush-fill" aria-hidden="true"></i>
             </button>
         </div>
 
 
         {#if cargando}
-            <div class="text-center" style="margin-top: 100px;">
-                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <div class="text-center" style="margin-top: 150px;">
+                <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
                     <span class="sr-only"></span>
                 </div>
             </div>
@@ -180,66 +210,74 @@
 </div>
 
 
-<div class="modal fade" id="Editar" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+{#if visibleModalEditar}
+
+<div class="modal fade show" style="display: block;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Contacto</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close" on:click={() => { visibleModalEditar = false; editableContacto = null; }}></button>
       </div>
 
+      <form on:submit|preventDefault={actualizarContacto}>
+
       <div class="modal-body">
-        <form>
-            <div class="row">
 
-                <div class="col-12">
-                    <p class="text-center">Nombre:</p>
-                </div>
+        <div class="row">
 
-                <div class="col-12 d-flex justify-content-center align-items-center">
-                    <input bind:value={contacto.nombre} class="form-control" placeholder="Nombre" style="width: 70%;">
-                </div>
+            <div class="col-12">
+                <p class="text-center">Nombre:</p>
+            </div>
 
-                <div class="col-12 mt-3">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={editableContacto.nombre} class="form-control" placeholder="Nombre" style="width: 70%;">
+            </div>
+
+            <div class="col-12 mt-3">
                 <p class="text-center">Apellidos:</p>
-                </div>
-                <div class="col-12 d-flex justify-content-center align-items-center">
-                <input bind:value={contacto.apellidos} class="form-control" placeholder="Apellidos" style="width: 70%;" />
-                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={editableContacto.apellidos} class="form-control" placeholder="Apellidos" style="width: 70%;" />
+            </div>
 
                 <!-- Teléfono -->
-                <div class="col-12 mt-3">
+            <div class="col-12 mt-3">
                 <p class="text-center">Teléfono:</p>
-                </div>
-                <div class="col-12 d-flex justify-content-center align-items-center">
-                <input bind:value={contacto.Telefono} class="form-control" placeholder="Teléfono" style="width: 70%;" />
-                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={editableContacto.telefono} class="form-control" placeholder="Teléfono" style="width: 70%;" />
+            </div>
 
                 <!-- Correo -->
-                <div class="col-12 mt-3">
+            <div class="col-12 mt-3">
                 <p class="text-center">Correo:</p>
-                </div>
-                <div class="col-12 d-flex justify-content-center align-items-center">
-                <input bind:value={contacto.correo} class="form-control" placeholder="Correo" style="width: 70%;" />
-                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={editableContacto.correo} type="email" class="form-control" placeholder="Correo" style="width: 70%;" required/>
+            </div>
 
                 <!-- Dirección -->
-                <div class="col-12 mt-3">
+            <div class="col-12 mt-3">
                 <p class="text-center">Dirección:</p>
-                </div>
-                <div class="col-12 d-flex justify-content-center align-items-center">
-                <input bind:value={contacto.direccion} class="form-control" placeholder="Dirección" style="width: 70%;" />
-                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <input bind:value={editableContacto.direccion} class="form-control" placeholder="Dirección" style="width: 70%;" />
+            </div>
 
                 <!-- Categoría -->
-                <div class="col-12 mt-3">
+            <div class="col-12 mt-3">
                 <p class="text-center">Categoría:</p>
-                </div>
-                <div class="col-12 d-flex justify-content-center align-items-center">
+            </div>
+            <div class="col-12 d-flex justify-content-center align-items-center">
                 <i class="bi bi-grid" style="font-size: 2rem; margin-right: 10px;"></i>
-                <select bind:value={contacto.categoria} class="form-select" style="width: 70%; height: 60px;">
-                     <option value="Familiar">Familia</option>
-                    <option value="Ecuela">Escuela</option>
+                <select bind:value={editableContacto.categoria} class="form-select" style="width: 70%; height: 60px;" required>
+                    <option value="Familia">Familia</option>
+                    <option value="Escuela">Escuela</option>
                     <option value="Amigo">Amigo</option>
                     <option value="Negocio">Negocio</option>
                     <option value="Novia">Novia</option>
@@ -247,18 +285,21 @@
                     <option value="Ex">Ex</option>
                     <option value="Amante">Amante</option>
                 </select>
-                </div>
             </div>
-        </form>
+        </div>
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success">Actualizar</button>
-      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" on:click={() => { visibleModalEditar = false; editableContacto = null; }}>Cerrar</button>
+            <button type="submit" class="btn btn-success">Actualizar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+    
+{/if}
+
 
 <Modal
     titulo="Eliminar"
