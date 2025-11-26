@@ -6,10 +6,6 @@
 
 Pequeña PWA construida con SvelteKit que consume la API backend `api-contacto` (Spring Boot). Proporciona un CRUD de contactos, autenticación por sesión y una UI móvil/desktop con Bootstrap.
 
-Badges (ejemplos):
-
-![build](https://img.shields.io/badge/build-dev-green) ![svelte](https://img.shields.io/badge/framework-SvelteKit-orange)
-
 ---
 ## Visualizacion
 
@@ -24,10 +20,12 @@ Badges (ejemplos):
     <img alt="mobil  " src="image-8.png" width="auto" height="400" />
 </p>
 ---
+
 ## Resumen
 - Stack: SvelteKit (v2.x), Vite, Axios, Bootstrap.
 - Propósito: frontend PWA que consume la API REST `api-contacto`.
 - Requisitos backend: la API Spring Boot debería correr en `VITE_API_URL` para que la app funcione completamente.
+  
 ---
 
 ## Requisitos
