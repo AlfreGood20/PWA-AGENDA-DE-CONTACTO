@@ -149,4 +149,4 @@ Estos componentes son diseñados para usarse desde páginas y para mantener la U
 
 Autor: AlfreGood20
 
-Última actualización: 2025-11-24
+Última actualización: 2025-12-31
