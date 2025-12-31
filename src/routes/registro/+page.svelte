@@ -13,7 +13,14 @@
 
     let mostrarPassword=false;
 
+    $: valido = !!nombre && !!apellidos && String(telefono).length >= 10 && String(telefono).length <= 13 && validarCorreo(correo) && password.length >= 8;
+
+
     async function registrarse() {
+
+        if(!valido){
+            return;
+        }
         try {
             const response = await postUsuario(new Usuario(nombre, apellidos, telefono, correo, password));
             goto('/login');

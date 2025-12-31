@@ -3,33 +3,26 @@ import { Login } from './js/clases';
 import { contacto } from './js/clases';
 import { Usuario } from './js/clases';
 
-
 const API_URL = import.meta.env.VITE_API_URL;
+
+/**
+ * @type {string}
+ */
+let token;
+
+const apiClient = axios.create({
+    baseURL: API_URL,
+})
 
 /**
  * @param {Login} request
  */
 export async function postLogin(request) {
 
-    try{
-        const response = await axios.post(`${API_URL}/auth`, request, {
-            withCredentials: true
-        });
+    const response = await apiClient.post('/auth',request);
 
-        return response.data;
-    }catch(error){
-        throw error;
-    }
-}
-
-
-export async function getCerrarSession() {
-    try{
-        const reponse = await axios.get(`${API_URL}/deauthenticate`);
-        return reponse;
-    }catch(error){
-        throw error;
-    }
+    token = response.data.token;
+    return response.data;
 }
 
 
@@ -38,7 +31,7 @@ export async function getCerrarSession() {
  */
 export async function postUsuario(request) {
     try {
-        const reponse = await axios.post(`${API_URL}/usuario`,request)
+        const reponse = await apiClient.post(`/usuario`,request,)
         return reponse;
     } catch (error) {
         throw error;
@@ -46,22 +39,16 @@ export async function postUsuario(request) {
 }
 
 export async function getPefil() {
-    try{
-        const response = await axios.get(`${API_URL}/perfil`,{
-            withCredentials: true
-        })
-
-        return response.data;
-    }catch(error){
-        throw error;
-    }
+    return null;
 }
 
 // CONTACTOS
 export async function getContactos() {
     try{
-        const reponse = await axios.get(`${API_URL}/contactos`,{
-            withCredentials: true
+        const reponse = await apiClient.get('/user/contactos',{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
 
         return reponse.data;
@@ -75,8 +62,10 @@ export async function getContactos() {
  */
 export async function getContactoId(id) {
     try{
-        const response = await axios.get(`${API_URL}/contacto/${id}`,{
-            withCredentials: true
+        const response = await apiClient.get(`/user/contacto/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         return response.data;
     }catch(e){
@@ -86,8 +75,10 @@ export async function getContactoId(id) {
 
 export async function getContactosFavoritos() {
     try{
-        const response= await axios.get(`${API_URL}/contactos/favoritos`,{
-            withCredentials: true
+        const response= await apiClient.get('/user/contactos/favoritos',{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         });
 
         return response.data;
@@ -101,8 +92,10 @@ export async function getContactosFavoritos() {
  */
 export async function postContacto(request) {
     try{
-        const response= await axios.post(`${API_URL}/contacto`, request,{
-            withCredentials: true
+        const response= await apiClient.post('/user/contacto', request,{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         });
 
         return response.data;
@@ -116,8 +109,10 @@ export async function postContacto(request) {
  */
 export async function deleteContactoId(id) {
     try{
-        const response = await axios.delete(`${API_URL}/contacto/${id}`,{
-            withCredentials: true
+        const response = await apiClient.delete(`/user/contacto/${id}`,{
+            headers: {
+                Authorization:`Bearer ${token}`
+            }
         });
 
         return response.status;
@@ -133,8 +128,13 @@ export async function deleteContactoId(id) {
 
 export async function patchContactoIsFavorito(id, estado) {
     try{
-        const response = await axios.patch(`${API_URL}/contacto/${id}?estado=${estado}`, null, {
-            withCredentials: true
+        const response = await apiClient.patch(`/user/contacto/${id}`,null, {
+            params: {
+                estado
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
 
         return response.data;
@@ -148,8 +148,10 @@ export async function patchContactoIsFavorito(id, estado) {
  */
 export async function putContacto(id, request) {
     try {
-        const response = await axios.put(`${API_URL}/contacto/${id}`, request, {
-            withCredentials: true
+        const response = await apiClient.put(`${API_URL}/user/contacto/${id}`, request, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
 
         return response.data;

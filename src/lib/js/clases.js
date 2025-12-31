@@ -51,6 +51,7 @@ export class Usuario{
     telefono;
     correo;
     contrasena;
+    rol_ids;
 
     /**
      * @param {string} nombre 
@@ -66,5 +67,6 @@ export class Usuario{
         this.telefono=telefono;
         this.correo=correo;
         this.contrasena=contrasena;
+        this.rol_ids=[2];
     }
 }

@@ -15,6 +15,11 @@
             await goto('/menu/contactos');
         }catch(e){
             // @ts-ignore
+            if(e.status == 404){
+                mostrarNoAutorizado=true;
+            }
+
+            // @ts-ignore
             if(e.status == 401){
                 mostrarNoAutorizado=true;
             }
